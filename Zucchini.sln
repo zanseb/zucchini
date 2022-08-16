@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zucchetti", "Zuchetti\Zucchetti.csproj", "{BB030F1F-34F4-4382-8B83-17619C7E10D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zucchetti.Tests", "Zucchetti.Tests\Zucchetti.Tests.csproj", "{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB030F1F-34F4-4382-8B83-17619C7E10D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB030F1F-34F4-4382-8B83-17619C7E10D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB030F1F-34F4-4382-8B83-17619C7E10D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB030F1F-34F4-4382-8B83-17619C7E10D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B90DF0BB-2284-4867-BD82-BEA15EEF7328}
+	EndGlobalSection
+EndGlobal
