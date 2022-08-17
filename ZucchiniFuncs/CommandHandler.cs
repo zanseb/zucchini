@@ -19,9 +19,9 @@ namespace ZucchiniFuncs
         {
             return command switch
             {
-                "in" => HandleClockInAsync(),
-                "out" => HandleClockOutAsync(),
-                "stamps" => HandleRetrieveStampsAsync(),
+                "/in" => HandleClockInAsync(),
+                "/out" => HandleClockOutAsync(),
+                "/stamps" => HandleRetrieveStampsAsync(),
                 _ => HandleUknownCommandAsync(),
             };
         }
