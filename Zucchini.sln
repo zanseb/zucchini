@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zucchetti", "Zucchetti\Zucchetti.csproj", "{BB030F1F-34F4-4382-8B83-17619C7E10D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zucchetti", "Zucchetti\Zucchetti.csproj", "{BB030F1F-34F4-4382-8B83-17619C7E10D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zucchetti.Tests", "Zucchetti.Tests\Zucchetti.Tests.csproj", "{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zucchetti.Tests", "Zucchetti.Tests\Zucchetti.Tests.csproj", "{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZucchiniFuncs", "ZucchiniFuncs\ZucchiniFuncs.csproj", "{F6D37CA4-8B2D-48F5-AF7F-05102BE44160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C9F2662-5F3A-4B8A-8EBD-49227A39F785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6D37CA4-8B2D-48F5-AF7F-05102BE44160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6D37CA4-8B2D-48F5-AF7F-05102BE44160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6D37CA4-8B2D-48F5-AF7F-05102BE44160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6D37CA4-8B2D-48F5-AF7F-05102BE44160}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
