@@ -39,20 +39,23 @@ namespace ZucchiniFuncs
             var zucchettiUser = Environment.GetEnvironmentVariable("ZucchettiUser");
             var zucchettiPassword = Environment.GetEnvironmentVariable("ZucchettiPassword");
 
+            var botClient = new TelegramBotClient(telegramApiKey);
             var zucchettiClient = new ZucchettiClient(zucchettiBaseUrl, zucchettiUser, zucchettiPassword);
-            await zucchettiClient.LoginAsync();
-            var stamps = await zucchettiClient.RetrieveStampsAsync(DateOnly.FromDateTime(DateTime.Now));
-
-            var message = new StringBuilder();
-            foreach (var stamp in stamps)
+            try
             {
-                message.AppendLine($"{(stamp.Direction == StampDirection.In ? "😩" : "😁")} - {stamp.Time}");
+                await zucchettiClient.LoginAsync();
+            }
+            catch (Exception)
+            {
+                await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, "Could not perform log in");
+                throw;
             }
 
-            var botClient = new TelegramBotClient(telegramApiKey);
-            await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, message.ToString());
+            var handler = new CommandHandler(zucchettiClient);
+            var responseMessage = await handler.HandleAsync(telegramUpdate.message.text);
 
-            log.LogInformation(requestBody);
+            await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, responseMessage);
+;
             return new OkResult();
         }
     }
