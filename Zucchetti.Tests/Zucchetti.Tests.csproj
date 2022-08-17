@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zuchetti\Zucchetti.csproj" />
+    <ProjectReference Include="..\Zucchetti\Zucchetti.csproj" />
   </ItemGroup>
 
 </Project>

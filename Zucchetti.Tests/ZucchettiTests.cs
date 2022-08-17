@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xunit;
-using Zuchetti;
 
 namespace Zucchetti.Tests
 {
@@ -34,7 +33,7 @@ namespace Zucchetti.Tests
             await zClient.LoginAsync();
 
             var stamps = await zClient.RetrieveStampsAsync(DateOnly.Parse("2022/08/16"));
-            
+
             Assert.NotEmpty(stamps);
         }
 
