@@ -21,7 +21,6 @@ namespace ZucchiniFuncs
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("Telegram hook invoke requested");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             TelegramUpdateDTO telegramUpdate;
@@ -32,6 +31,13 @@ namespace ZucchiniFuncs
             catch (JsonException)
             {
                 return new BadRequestResult();
+            }
+
+            var allowedChatId = Convert.ToInt32(Environment.GetEnvironmentVariable("TelegramChatId"));
+            var chatId = telegramUpdate.message.chat.id;
+            if (chatId != allowedChatId)
+            {
+                return new UnauthorizedResult();
             }
 
             var telegramApiKey = Environment.GetEnvironmentVariable("TelegramApiKey");
@@ -47,7 +53,7 @@ namespace ZucchiniFuncs
             }
             catch (Exception)
             {
-                await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, "Could not perform log in");
+                await botClient.SendTextMessageAsync(chatId, "❌ Snap, I can't log in ❌");
                 throw;
             }
 
