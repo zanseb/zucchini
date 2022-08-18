@@ -62,7 +62,7 @@ namespace ZucchiniFuncs
             var responseMessage = await handler.HandleAsync(telegramUpdate.message.text);
 
             await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, responseMessage);
-;
+
             return new OkResult();
         }
     }
