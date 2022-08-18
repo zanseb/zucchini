@@ -41,7 +41,9 @@ namespace ZucchiniFuncs
         private async Task<string> HandleRetrieveStampsAsync()
         {
             var result = new StringBuilder();
-            var stamps = await client.RetrieveStampsAsync(DateOnly.FromDateTime(DateTime.Now));
+            DateTime currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
+            var stamps = await client.RetrieveStampsAsync(DateOnly.FromDateTime(currentTime));
+            stamps = stamps.OrderBy((stamp) => stamp.Time);
 
             if (stamps.Count() == 0)
             {
@@ -63,6 +65,11 @@ namespace ZucchiniFuncs
                 var clockOutStamp = pair.Last();
 
                 difference += clockOutStamp.Time - clockInStamp.Time;
+            }
+
+            if (stamps.Count() % 2 != 0)
+            {
+                difference += currentTime - stamps.Last().Time;
             }
 
             result.AppendLine(String.Empty);
