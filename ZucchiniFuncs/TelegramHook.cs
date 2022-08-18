@@ -37,7 +37,8 @@ namespace ZucchiniFuncs
             var chatId = telegramUpdate.message.chat.id;
             if (chatId != allowedChatId)
             {
-                return new UnauthorizedResult();
+                // Tell telegram that everything is OK so that it does not retry continuously
+                return new OkResult();
             }
 
             var telegramApiKey = Environment.GetEnvironmentVariable("TelegramApiKey");
