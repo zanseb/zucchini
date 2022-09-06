@@ -70,6 +70,10 @@ namespace ZucchiniFuncs
             if (stamps.Count() % 2 != 0)
             {
                 difference += currentTime - stamps.Last().Time;
+                var estimatedClockoutTime = currentTime + (TimeSpan.FromHours(8) - difference);
+
+                result.AppendLine(String.Empty);
+                result.AppendLine($"👋 -- {estimatedClockoutTime.ToString("g")}");
             }
 
             result.AppendLine(String.Empty);
