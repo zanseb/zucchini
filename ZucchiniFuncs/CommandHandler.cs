@@ -22,7 +22,7 @@ namespace ZucchiniFuncs
                 "/in" => HandleClockInAsync(),
                 "/out" => HandleClockOutAsync(),
                 "/stamps" => HandleRetrieveStampsAsync(),
-                _ => HandleUknownCommandAsync(),
+                _ => HandleUnknownCommandAsync(),
             };
         }
 
@@ -82,7 +82,7 @@ namespace ZucchiniFuncs
             return result.ToString();
         }
 
-        private Task<string> HandleUknownCommandAsync()
+        private Task<string> HandleUnknownCommandAsync()
         {
             return Task.FromResult("😵");
         }
