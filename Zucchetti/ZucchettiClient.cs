@@ -1,13 +1,15 @@
 ﻿using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Zucchetti
 {
     public class ZucchettiClient
     {
-        private const string loginRoute = "servlet/cp_login";
+        private const string ssoRoute = "servlet/ushp_btrustsite";
         private const string sqlDataProviderRoute = "servlet/SQLDataProviderServer";
         private const string stampRoute = "servlet/ushp_ftimbrus";
         private const string mCIDRoute = "jsp/ushp_one_column_model.jsp";
@@ -23,28 +25,41 @@ namespace Zucchetti
             this.userName = userName;
             this.password = password;
 
-            httpClient = new() { BaseAddress = new Uri(baseURL) };
+            var cookies = new CookieContainer();
+            var handler = new HttpClientHandler();
+            handler.CookieContainer = cookies;
+            handler.UseCookies = true;
+            httpClient = new(handler) { BaseAddress = new Uri(baseURL) };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
         }
 
         public async Task LoginAsync()
         {
-            var loginParams = new Dictionary<string, string>()
+            var ssoPageResponse = await httpClient.GetAsync(QueryHelpers.AddQueryString(ssoRoute, "idSSO", "1"));
+            ssoPageResponse.EnsureSuccessStatusCode();
+
+            var ssoPagePayload = await ssoPageResponse.Content.ReadAsStringAsync();
+            var authRoute = HtmlContentExtractor.ExtractAuthRoute(ssoPagePayload);
+
+            var ssoLoginParams = new Dictionary<string, string>()
             {
-                ["m_cUserName"] = userName,
-                ["m_cPassword"] = password,
-                ["m_cAction"] = "login",
+                ["username"] = userName,
+                ["password"] = password,
             };
 
-            var response = await httpClient.PostAsync(loginRoute, new FormUrlEncodedContent(loginParams));
-            response.EnsureSuccessStatusCode();
+            var ssoLoginResponse = await httpClient.PostAsync(authRoute, new FormUrlEncodedContent(ssoLoginParams));
+            ssoLoginResponse.EnsureSuccessStatusCode();
 
-            var headerPresent = response.Headers.TryGetValues("JSURL-Message", out var _);
-            if (headerPresent)
+            var ssoLoginPayload = await ssoLoginResponse.Content.ReadAsStringAsync();
+            var SAMLResult = HtmlContentExtractor.ExtractSAML(ssoLoginPayload);
+
+            var forwardSAMLParams = new Dictionary<string, string>()
             {
-                throw new Exception();
-            }
+                ["SAMLResponse"] = SAMLResult,
+            };
+            var forwardSAMLResponse = await httpClient.PostAsync(ssoRoute, new FormUrlEncodedContent(forwardSAMLParams));
+            forwardSAMLResponse.EnsureSuccessStatusCode();
         }
 
         public async Task<IEnumerable<Stamp>> RetrieveStampsAsync(DateOnly day)
@@ -53,7 +68,6 @@ namespace Zucchetti
             {
                 ["rows"] = "25",
                 ["startrow"] = "0",
-                ["count"] = "true",
                 ["sqlcmd"] = "rows:ushp_fgettimbrus",
                 ["pDATE"] = day.ToString("yyyy-MM-dd"),
             };
@@ -103,7 +117,7 @@ namespace Zucchetti
             var createStampParams = new Dictionary<string, string>()
             {
                 ["verso"] = direction == StampDirection.In ? "E" : "U",
-                ["causale"] = "",
+                ["causale"] = string.Empty,
                 ["m_cID"] = mCID,
             };
 
