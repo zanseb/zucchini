@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Zucchetti;
 
 namespace ZucchiniFuncs
@@ -15,15 +16,24 @@ namespace ZucchiniFuncs
             this.client = client;
         }
 
-        public Task<string> HandleAsync(string command)
+        public async Task<string> HandleAsync(string command)
         {
-            return command switch
+            try
             {
-                "/in" => HandleClockInAsync(),
-                "/out" => HandleClockOutAsync(),
-                "/stamps" => HandleRetrieveStampsAsync(),
-                _ => HandleUnknownCommandAsync(),
-            };
+                Task<string> task = command switch
+                {
+                    "/in" => HandleClockInAsync(),
+                    "/out" => HandleClockOutAsync(),
+                    "/stamps" => HandleRetrieveStampsAsync(),
+                    _ => HandleUnknownCommandAsync(),
+                };
+
+                return await task;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         private async Task<string> HandleClockInAsync()
@@ -45,7 +55,7 @@ namespace ZucchiniFuncs
             var stamps = await client.RetrieveStampsAsync(DateOnly.FromDateTime(currentTime));
             stamps = stamps.OrderBy((stamp) => stamp.Time);
 
-            if (stamps.Count() == 0)
+            if (!stamps.Any())
             {
                 return "No stamps today 🤐";
             }

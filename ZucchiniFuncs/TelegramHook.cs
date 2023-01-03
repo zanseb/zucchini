@@ -1,16 +1,19 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using ZucchiniFuncs.Models;
+
 using Telegram.Bot;
+
 using Zucchetti;
-using System.Text;
+
+using ZucchiniFuncs.Models;
 
 namespace ZucchiniFuncs
 {
@@ -47,6 +50,17 @@ namespace ZucchiniFuncs
             var zucchettiPassword = Environment.GetEnvironmentVariable("ZucchettiPassword");
 
             var botClient = new TelegramBotClient(telegramApiKey);
+
+            DateTime dateTime = UnixTimeStampToDateTime(telegramUpdate.message.date);
+            DateTime utcNow = DateTime.UtcNow;
+            TimeSpan timeSpan = dateTime - utcNow;
+
+            if (Math.Abs(timeSpan.TotalMinutes) > 1)
+            {
+                await botClient.SendTextMessageAsync(chatId, "❌ Snap, old messages will be ignored 🤷");
+                return new OkResult();
+            }
+
             var zucchettiClient = new ZucchettiClient(zucchettiBaseUrl, zucchettiUser, zucchettiPassword);
             try
             {
@@ -64,6 +78,11 @@ namespace ZucchiniFuncs
             await botClient.SendTextMessageAsync(telegramUpdate.message.chat.id, responseMessage);
 
             return new OkResult();
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            return DateTime.UnixEpoch.AddSeconds(unixTimeStamp).ToLocalTime();
         }
     }
 }

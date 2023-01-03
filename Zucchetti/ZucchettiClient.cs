@@ -90,7 +90,7 @@ namespace Zucchetti
                     var stampProperties = element.Deserialize<List<string>>();
                     var datePart = stampProperties[0];
                     var timePart = stampProperties[1];
-                    var direction = stampProperties[2] == "E" ?  StampDirection.In : StampDirection.Out;
+                    var direction = stampProperties[2] == "E" ? StampDirection.In : StampDirection.Out;
 
                     var stampeDateTime = DateTime.ParseExact($"{datePart} {timePart}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
                     stamps.Add(new Stamp(stampeDateTime, direction));
@@ -125,9 +125,9 @@ namespace Zucchetti
             response.EnsureSuccessStatusCode();
 
             var payload = await response.Content.ReadAsStringAsync();
-            if (!payload.Contains("Ok routine eseguita."))
+            if (!payload.Contains("Ok routine eseguita.") && !payload.Contains("Ok Routine wurde ausgeführt"))
             {
-                throw new Exception();
+                throw new Exception("Failed to stamp ");
             }
         }
 
