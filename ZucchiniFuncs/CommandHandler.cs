@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 using Zucchetti;
 using Zucchini.Bot;
@@ -194,7 +190,7 @@ namespace ZucchiniFuncs
                     giftedWorkTime += workingHours - workingHourTarget;
                 }
 
-                result.AppendLine($"<code>{day.ToString("ddd dd.MM")}</code>: {workingHours.ToString(@"hh\:mm")}{status}");
+                result.AppendLine($"{day.ToString("ddd dd.MM")}: {workingHours.ToString(@"hh\:mm")}{status}");
             }
 
             result.AppendLine();

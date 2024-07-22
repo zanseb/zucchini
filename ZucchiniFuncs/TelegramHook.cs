@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 using Telegram.Bot;
@@ -19,13 +15,18 @@ namespace ZucchiniFuncs
 {
     public static class TelegramHook
     {
-        [FunctionName(nameof(TelegramHook))]
+        [Function(nameof(TelegramHook))]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            if (requestBody is null)
+            {
+                return new BadRequestResult();
+            }
+
             TelegramUpdateDTO telegramUpdate;
             try
             {
