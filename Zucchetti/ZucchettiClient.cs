@@ -36,22 +36,30 @@ namespace Zucchetti
 
         public async Task LoginAsync()
         {
-            var ssoPageResponse = await httpClient.GetAsync(QueryHelpers.AddQueryString(ssoRoute, "idSSO", "1"));
-            ssoPageResponse.EnsureSuccessStatusCode();
-
-            var ssoPagePayload = await ssoPageResponse.Content.ReadAsStringAsync();
-            var authRoute = HtmlContentExtractor.ExtractAuthRoute(ssoPagePayload);
-
             var ssoLoginParams = new Dictionary<string, string>()
             {
                 ["username"] = userName,
                 ["password"] = password,
+                ["credentialId"] = "",
             };
 
-            var ssoLoginResponse = await httpClient.PostAsync(authRoute, new FormUrlEncodedContent(ssoLoginParams));
-            ssoLoginResponse.EnsureSuccessStatusCode();
+            var ssoPageResponse = await httpClient.GetAsync(QueryHelpers.AddQueryString(ssoRoute, "idSSO", "1"));
+            ssoPageResponse.EnsureSuccessStatusCode();
 
-            var ssoLoginPayload = await ssoLoginResponse.Content.ReadAsStringAsync();
+            var ssoPagePayload = await ssoPageResponse.Content.ReadAsStringAsync();
+
+            // User input request
+            var authUserRoute = HtmlContentExtractor.ExtractAuthRoute(ssoPagePayload);
+            var ssoLoginUserResponse = await httpClient.PostAsync(authUserRoute, new FormUrlEncodedContent(ssoLoginParams));
+            ssoLoginUserResponse.EnsureSuccessStatusCode();
+            var ssoLoginUserPayload = await ssoLoginUserResponse.Content.ReadAsStringAsync();
+
+            // User and Password input request
+            var authUserPassRoute = HtmlContentExtractor.ExtractAuthRoute(ssoLoginUserPayload);
+            var ssoLoginUserPassResponse = await httpClient.PostAsync(authUserPassRoute, new FormUrlEncodedContent(ssoLoginParams));
+            ssoLoginUserPassResponse.EnsureSuccessStatusCode();
+            var ssoLoginPayload = await ssoLoginUserPassResponse.Content.ReadAsStringAsync();
+
             var SAMLResult = HtmlContentExtractor.ExtractSAML(ssoLoginPayload);
 
             var forwardSAMLParams = new Dictionary<string, string>()
